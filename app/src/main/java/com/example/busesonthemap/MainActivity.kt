@@ -24,7 +24,7 @@ import org.osmdroid.views.overlay.Marker
 
 class MainActivity : AppCompatActivity() {
     private lateinit var map: MapView
-    private var busMarkers: HashMap<String, Marker> = HashMap()
+    private val busMarkers: HashMap<String, Marker> = HashMap()
 
     private var hslMqttService: HslMqttBusService? = null
     private val hslMqttServiceConnection = object : ServiceConnection {
