@@ -7,3 +7,6 @@ The app parses the MQTT JSON payload and displays bus locations, line names, spe
 
 ## Architecture
 ![Simplified architecture diagram](https://github.com/harriris/busesonthemap/blob/main/architecture.jpg)
+
+## Screenshots
+<img src="https://github.com/harriris/busesonthemap/blob/main/screenshot.jpg" alt="Screenshot of the app UI" height="480">
