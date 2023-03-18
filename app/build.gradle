@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.busesonthemap'
+    namespace 'com.github.harriris.busesonthemap'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.busesonthemap"
+        applicationId "com.github.harriris.busesonthemap"
         minSdk 21
         targetSdk 33
         versionCode 1
@@ -49,6 +49,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'androidx.test:rules:1.5.0'
     implementation 'androidx.test:core-ktx:1.5.0'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

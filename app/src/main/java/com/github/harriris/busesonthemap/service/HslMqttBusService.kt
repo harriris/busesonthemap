@@ -1,12 +1,12 @@
-package com.example.busesonthemap.service
+package com.github.harriris.busesonthemap.service
 
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import com.example.busesonthemap.model.HslBus
-import com.example.busesonthemap.model.HslBusResponse
+import com.github.harriris.busesonthemap.model.HslBus
+import com.github.harriris.busesonthemap.model.HslBusResponse
 import info.mqtt.android.service.MqttAndroidClient
 import info.mqtt.android.service.QoS
 import kotlinx.serialization.SerializationException

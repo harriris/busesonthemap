@@ -1,7 +1,7 @@
-package com.example.busesonthemap
+package com.github.harriris.busesonthemap
 
-import com.example.busesonthemap.model.HslBus
-import com.example.busesonthemap.model.HslBusResponse
+import com.github.harriris.busesonthemap.model.HslBus
+import com.github.harriris.busesonthemap.model.HslBusResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -10,7 +10,7 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
- * Units tests for the data classes in com.example.busesonthemap.model.
+ * Units tests for the data classes in com.github.harriris.busesonthemap.model.
  */
 class ModelTest {
     @Test

@@ -1,4 +1,4 @@
-package com.example.busesonthemap
+package com.github.harriris.busesonthemap
 
 import android.content.ComponentName
 import android.content.Context
@@ -8,8 +8,8 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
-import com.example.busesonthemap.model.HslBus
-import com.example.busesonthemap.service.HslMqttBusService
+import com.github.harriris.busesonthemap.model.HslBus
+import com.github.harriris.busesonthemap.service.HslMqttBusService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -125,6 +125,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMap() {
+        getInstance().userAgentValue = BuildConfig.APPLICATION_ID
+
         map = findViewById(R.id.map)
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)

@@ -1,11 +1,11 @@
-package com.example.busesonthemap
+package com.github.harriris.busesonthemap
 
 import android.content.Intent
 import android.os.IBinder
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ServiceTestRule
-import com.example.busesonthemap.service.HslMqttBusService
+import com.github.harriris.busesonthemap.service.HslMqttBusService
 import org.hamcrest.CoreMatchers.isA
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.assertTrue
