@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.github.harriris.busesonthemap.model.HslBus
 import com.github.harriris.busesonthemap.service.HslMqttBusService
+import com.github.harriris.busesonthemap.util.DatetimeFormatter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,17 +22,13 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
-import java.text.DateFormat
-import java.text.DateFormat.getDateTimeInstance
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity() {
     private lateinit var map: MapView
-    private val busMarkers: HashMap<String, Marker> = HashMap()
+    private lateinit var busMarkers: HashMap<String, Marker>
+    private lateinit var busDatetimeFormatter: DatetimeFormatter
 
     private var hslMqttService: HslMqttBusService? = null
     private val hslMqttServiceConnection = object : ServiceConnection {
@@ -44,22 +41,6 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceDisconnected(name: ComponentName?) {
             hslMqttService = null
         }
-    }
-
-    private lateinit var localDateTimeFormat: DateFormat
-    private lateinit var busDateParser: SimpleDateFormat
-
-    private fun getFormattedTimestamp(timestamp: String?): String {
-        if (timestamp == null || timestamp.isEmpty()) {
-            return "Unknown timestamp"
-        }
-        val parsedDate: Date
-        try {
-            parsedDate = busDateParser.parse(timestamp) as Date
-        } catch (exc: ParseException) {
-            return "Unknown timestamp"
-        }
-        return localDateTimeFormat.format(parsedDate)
     }
 
     private fun pollForBusLineUpdates(): Job {
@@ -75,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setBusMarkerInfo(busMarker: Marker, hslBus: HslBus) {
         busMarker.title = hslBus.lineName
-        busMarker.snippet = "${hslBus.speedKph}<br>${getFormattedTimestamp(hslBus.timestamp)}"
+        busMarker.snippet = "${hslBus.speedKph}<br>${busDatetimeFormatter.format(hslBus.timestamp)}"
         busMarker.position = GeoPoint(hslBus.lat!!, hslBus.lon!!)
     }
 
@@ -96,10 +77,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        busMarkers = HashMap()
+        busDatetimeFormatter = DatetimeFormatter(HslBus.DATETIME_FORMAT)
+
         getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
         setContentView(R.layout.activity_main)
 
-        initBusDateTimeFormatter()
         initMap()
     }
 
@@ -113,15 +96,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         unbindService(hslMqttServiceConnection)
-    }
-
-    private fun initBusDateTimeFormatter() {
-        localDateTimeFormat = getDateTimeInstance()
-        busDateParser = SimpleDateFormat(
-            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-            Locale.getDefault(),
-        )
-        busDateParser.timeZone = TimeZone.getTimeZone("UTC")
     }
 
     private fun initMap() {

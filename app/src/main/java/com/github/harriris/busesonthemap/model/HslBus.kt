@@ -20,4 +20,8 @@ data class HslBus(
             this.speed != null -> "${String.format("%.2f", this.speed * 3.6)} km/h"
             else -> "? km/h"
         }
+
+    companion object {
+        const val DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    }
 }
