@@ -3,14 +3,16 @@ package com.github.harriris.busesonthemap.util
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class DatetimeFormatter(datetimeFormat: String) {
-    private var localDateTimeFormat: DateFormat = DateFormat.getDateTimeInstance()
+    private val localDateTimeFormat: DateFormat = DateFormat.getDateTimeInstance()
     private var busDateParser: SimpleDateFormat
 
     init {
-        busDateParser = SimpleDateFormat(
+        this.busDateParser = SimpleDateFormat(
             datetimeFormat,
             Locale.getDefault(),
         )
@@ -23,10 +25,10 @@ class DatetimeFormatter(datetimeFormat: String) {
         }
         val parsedDate: Date
         try {
-            parsedDate = busDateParser.parse(timestamp) as Date
+            parsedDate = this.busDateParser.parse(timestamp) as Date
         } catch (exc: ParseException) {
             return "Unknown timestamp"
         }
-        return localDateTimeFormat.format(parsedDate)
+        return this.localDateTimeFormat.format(parsedDate)
     }
 }
