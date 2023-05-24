@@ -6,7 +6,13 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceManager
 import com.github.harriris.busesonthemap.model.HslBus
 import com.github.harriris.busesonthemap.service.HslMqttBusService
@@ -61,6 +67,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateMarkers(busLines: ArrayList<HslBus>?) {
+        if (!lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            return
+        }
         busLines?.forEach { hslBus ->
             var busMarker: Marker? = busMarkers[hslBus.id]
             if (busMarker == null) {
@@ -80,10 +89,9 @@ class MainActivity : AppCompatActivity() {
         busMarkers = HashMap()
         busDatetimeFormatter = DatetimeFormatter(HslBus.DATETIME_FORMAT)
 
-        getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
-        setContentView(R.layout.activity_main)
-
-        initMap()
+        setContent {
+            Map()
+        }
     }
 
     override fun onStart() {
@@ -98,17 +106,42 @@ class MainActivity : AppCompatActivity() {
         unbindService(hslMqttServiceConnection)
     }
 
-    private fun initMap() {
+    override fun onResume() {
+        super.onResume()
+        if (this::map.isInitialized) {
+            map.onResume()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (this::map.isInitialized) {
+            map.onPause()
+        }
+    }
+
+    @Composable
+    fun Map() {
+        map = initMap()
+        AndroidView({ map })
+    }
+
+    @Composable
+    private fun initMap(): MapView {
+        val context = LocalContext.current
+
+        getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context))
         getInstance().userAgentValue = BuildConfig.APPLICATION_ID
 
-        map = findViewById(R.id.map)
-        map.setTileSource(TileSourceFactory.MAPNIK)
-        map.setMultiTouchControls(true)
-        map.zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
-
-        val mapController = map.controller
-        mapController.setZoom(15.0)
-        val startPoint = GeoPoint(60.1699, 24.9384)
-        mapController.setCenter(startPoint)
+        return remember {
+            MapView(context).apply {
+                setTileSource(TileSourceFactory.MAPNIK)
+                setMultiTouchControls(true)
+                zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
+                controller.setZoom(15.0)
+                val startPoint = GeoPoint(60.1699, 24.9384)  // Helsinki city center
+                controller.setCenter(startPoint)
+            }
+        }
     }
 }

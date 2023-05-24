@@ -18,6 +18,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        compose true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -25,10 +29,16 @@ android {
                     'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = '1.4.1'
+    }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -37,12 +47,14 @@ android {
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.0'
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.activity:activity-compose:1.7.1'
+    implementation 'androidx.compose.foundation:foundation-layout:1.4.3'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.activity:activity-ktx:1.6.1'
-    implementation 'androidx.fragment:fragment-ktx:1.5.5'
+    implementation 'androidx.activity:activity-ktx:1.7.1'
+    implementation 'androidx.fragment:fragment-ktx:1.5.7'
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'com.github.hannesa2:paho.mqtt.android:3.5.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0'
