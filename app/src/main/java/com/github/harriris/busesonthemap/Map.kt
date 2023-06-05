@@ -39,6 +39,7 @@ private fun createMap(): MapView {
 
     return remember {
         MapView(context).apply {
+            id = R.id.map
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
             zoomController.setVisibility(CustomZoomButtonsController.Visibility.NEVER)
@@ -75,19 +76,23 @@ private fun BusMarkers(map: MapView, busLines: SnapshotStateList<HslBus>) {
     val busLineState = remember { busLines }
     val busMarkerState = remember { HashMap<String, Marker>() }
     busLineState.forEach { hslBus ->
-        var busMarker: Marker? = busMarkerState[hslBus.id]
-        if (busMarker == null) {
-            busMarker = Marker(map)
-            busMarker.id = hslBus.id
-            map.overlays.add(busMarker)
-            busMarkerState[hslBus.id] = busMarker
-        }
-        setBusMarkerInfo(busMarker, hslBus)
+        createOrUpdateBusMarker(map, busMarkerState, hslBus)
     }
     map.invalidate()
 }
 
-private fun setBusMarkerInfo(busMarker: Marker, hslBus: HslBus) {
+private fun createOrUpdateBusMarker(
+    map: MapView,
+    busMarkerState: HashMap<String, Marker>,
+    hslBus: HslBus
+) {
+    var busMarker: Marker? = busMarkerState[hslBus.id]
+    if (busMarker == null) {
+        busMarker = Marker(map)
+        busMarker.id = hslBus.id
+        map.overlays.add(busMarker)
+        busMarkerState[hslBus.id] = busMarker
+    }
     busMarker.title = hslBus.lineName
     busMarker.snippet = "${hslBus.speedKph}<br>${busDatetimeFormatter.format(hslBus.timestamp)}"
     busMarker.position = GeoPoint(hslBus.lat!!, hslBus.lon!!)
